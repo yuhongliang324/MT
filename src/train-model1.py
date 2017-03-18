@@ -29,14 +29,18 @@ class IBM1():
 
         # (2) [E] C[i,j] = theta[i,j] / sigma_i theta[i,j] (Equation 110)
         self.bi_count = defaultdict(lambda: defaultdict(float))
+        self.e_count = defaultdict(float)
         for iter in range(self.max_iter):
             for idx, (e, f) in enumerate(self.bitext):
+                if (idx+1)%1000==0:
+                    print iter, idx
                 for j in range(len(f)):
                     norm = 0.0
                     for i in range(len(e)):
                         norm += self.theta[e[i]][f[j]]
                     for i in range(len(e)):
                         self.bi_count[e[i]][f[j]] += (self.theta[e[i]][f[j]])/norm
+                        self.e_count[e[i]] += (self.theta[e[i]][f[j]])/norm
 
             # (3) [M] theta[i,j] =  C[i,j] / sigma_j C[i,j] (Equation 107)
             for e_k, e_dict in self.theta.iteritems():
@@ -53,10 +57,11 @@ class IBM1():
                     tmp = 0.0
                     for i in range(len(e)):
                         tmp += self.theta[e[i]][f[j]]
-                        #print self.theta[e[i]][f[j]], e[i], f[j]
+                    ll += math.log(tmp)
+                    #print self.theta[e[i]][f[j]], e[i], f[j]
             ll /= (idx+1.0)
-            print "[{}] Log Likelihood : {}".format(iter,round(ll,5))
-
+            print "[{}] Log Likelihood : {}".format(iter,ll)
+            print self.theta["mit"]["with"]
 
     def align(self):
         write_file = open(self.write_file,"w")
@@ -75,8 +80,8 @@ class IBM1():
 if __name__ == "__main__":
     #source_file = sys.argv[1]
     #target_file = sys.argv[2]
-    source_file = "../data/toy.train.de"
-    target_file = "../data/toy.train.en"
+    source_file = "../data/train.en-de.low.filt.de"
+    target_file = "../data/train.en-de.low.filt.en"
     output_file = "./output/alignment.txt"
 
     bitext = read_bitext(source_file,target_file)
