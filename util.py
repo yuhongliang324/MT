@@ -149,9 +149,6 @@ def test1():
         print sentVecs[i]
     print vocSize
 
-# def calculate_length_prior_Prob(src_vecs, tgt_vecs):
-
-
 
 if __name__ == '__main__':
     test1()
