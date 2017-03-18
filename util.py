@@ -2,7 +2,6 @@ __author__ = 'yuhongliang324'
 
 import os
 from collections import defaultdict
-import nltk
 import numpy as np
 
 data_root = '../data'
@@ -143,9 +142,6 @@ def make_pad_bidirection(vecs, startID, stopID):
             pads[j + num_startID][i] = vecs[i][j]
     return pads, lengths, maxLen
 
-def eval_BLEU(hypothesis, reference): # hypothesis and reference are list of tokens
-    BLEUscore = nltk.translate.bleu_score.bleu([reference],hypothesis,weights=(0.25, 0.25,0.25,0.25))
-    return BLEUscore
 
 def test1():
     tok_ID, ID_tok, sentVecs, vocSize = read_file(train_en)
