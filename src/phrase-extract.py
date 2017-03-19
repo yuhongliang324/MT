@@ -1,6 +1,23 @@
 __author__ = 'yuhongliang324'
-from util import train_de, train_en
 from collections import defaultdict
+import sys, os
+
+
+dn = os.path.dirname(os.path.abspath(__file__))
+
+data_root = os.path.join(dn, '../data')
+train_en = os.path.join(data_root, 'train.en-de.low.filt.en')
+train_de = os.path.join(data_root, 'train.en-de.low.filt.de')
+valid_en = os.path.join(data_root, 'valid.en-de.low.en')
+valid_de = os.path.join(data_root, 'valid.en-de.low.de')
+test_en = os.path.join(data_root, 'test.en-de.low.en')
+test_de = os.path.join(data_root, 'test.en-de.low.de')
+blind_de = os.path.join(data_root, 'blind.en-de.low.de')
+
+toy_train_en = os.path.join(data_root, 'toy.train.en')
+toy_train_de = os.path.join(data_root, 'toy.train.de')
+toy_test_en = os.path.join(data_root, 'toy.test.en')
+toy_test_de = os.path.join(data_root, 'toy.test.de')
 
 
 def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
@@ -119,5 +136,5 @@ def test1():
     extract(train_de, train_en, align_file, bp_file, threshold=2)
 
 
-if __name__ == '__main__':
-    test1()
+# python $SCRIPT_DIR/phrase-extract.py $TRAIN_DATA.de $TRAIN_DATA.en $OUT_DIR/alignment.txt $OUT_DIR/phrase.txt
+extract(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], threshold=2)
