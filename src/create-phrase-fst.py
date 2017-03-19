@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-fout = open('phrase-fst-tem.txt', 'w')
+fout = open('phrase-fst.txt', 'w')
 state_connect = defaultdict(dict)  # {0:{('un','<eps>'):4,}}
 statenum = 0
 
