@@ -8,6 +8,7 @@ from collections import defaultdict, Counter
 from util import *
 import math
 
+
 class IBM1():
     def __init__(self, bitext, output_file, max_iter=10):
         self.bitext = bitext
