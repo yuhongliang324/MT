@@ -4,7 +4,9 @@ import os
 from collections import defaultdict
 import numpy as np
 
-data_root = '../data'
+dn = os.path.dirname(os.path.abspath(__file__))
+
+data_root = os.path.join(dn, 'data')
 train_en = os.path.join(data_root, 'train.en-de.low.filt.en')
 train_de = os.path.join(data_root, 'train.en-de.low.filt.de')
 valid_en = os.path.join(data_root, 'valid.en-de.low.en')
