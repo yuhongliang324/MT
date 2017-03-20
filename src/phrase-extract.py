@@ -1,6 +1,7 @@
 __author__ = 'yuhongliang324'
 from collections import defaultdict
 import sys, os
+import math
 
 
 dn = os.path.dirname(os.path.abspath(__file__))
@@ -126,7 +127,8 @@ def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
     writer = open(out_file, 'w')
     for item in bp_prob:
         bp, prob = item[0], item[1]
-        writer.write(bp + '\t' + str(prob) + '\n')
+        nll = -math.log(prob)
+        writer.write(bp + '\t' + str(nll) + '\n')
     writer.close()
 
 
