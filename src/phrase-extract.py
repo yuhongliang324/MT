@@ -139,5 +139,4 @@ def test1():
 
 
 # python $SCRIPT_DIR/phrase-extract.py $TRAIN_DATA.de $TRAIN_DATA.en $OUT_DIR/alignment.txt $OUT_DIR/phrase.txt
-# extract(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], threshold=2)
-test1()
+extract(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], threshold=2)
