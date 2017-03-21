@@ -57,6 +57,8 @@ def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
                     continue
                 subE = ' '.join(E[i1: i2 + 1])
                 subF = ' '.join(F[j1: j2 + 1])
+                if len(subE) == 0 or len(subF) == 0:
+                    continue
                 BP.add(subF + '\t' + subE)
                 '''
                 j1p = j1
