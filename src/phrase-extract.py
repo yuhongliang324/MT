@@ -22,7 +22,7 @@ toy_test_de = os.path.join(data_root, 'toy.test.de')
 
 
 def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
-    def extract_sent(src_sent, tgt_sent, fid_eid, eid_fid):
+    def extract_sent(src_sent, tgt_sent, fids, eids):
         F = src_sent.split()
         E = tgt_sent.split()
         lenF = len(F)
@@ -31,34 +31,34 @@ def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
         for i1 in xrange(lenE):
             for i2 in xrange(i1, lenE):
                 TP = []
-                for i in xrange(i1, i2 + 1):
-                    if i not in eid_fid:
-                        continue
-                    TP.append(eid_fid[i])
+                for eid, fid in zip(eids, fids):
+                    if i1 <= eid <= i2:
+                        TP.append(fid)
                 if len(TP) == 0:
                     continue
                 TP.sort()
                 is_consecutive = True
                 j1, j2 = TP[0], TP[-1]
                 for fid in xrange(j1, j2 + 1):
-                    if fid in TP or fid not in fid_eid:
+                    if fid in TP or fid not in fids:
                         continue
                     is_consecutive = False
                     break
                 if not is_consecutive:
                     continue
                 SP = []
-                for j in xrange(j1, j2 + 1):
-                    if j not in fid_eid:
-                        continue
-                    SP.append(fid_eid[j])
+                for eid, fid in zip(eids, fids):
+                    if j1 <= fid <= j2:
+                        SP.append(eid)
                 if len(SP) == 0:
                     continue
                 SP.sort()
                 if not (i1 <= SP[0] and SP[-1] <= i2):
                     continue
                 subE = ' '.join(E[i1: i2 + 1])
-
+                subF = ' '.join(F[j1: j2 + 1])
+                BP.add(subF + '\t' + subE)
+                '''
                 j1p = j1
                 while j1p >= 0 and (j1p == j1 or j1p not in fid_eid):
                     j2p = j2
@@ -66,7 +66,7 @@ def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
                         subF = ' '.join(F[j1p: j2p + 1])
                         BP.add(subF + '\t' + subE)
                         j2p += 1
-                    j1p -= 1
+                    j1p -= 1'''
         return BP
     reader = open(src_file)
     src_sents = reader.readlines()
@@ -88,19 +88,20 @@ def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
     bp_count = defaultdict(float)
     for src_sent, tgt_sent, align in zip(src_sents, tgt_sents, alignments):
         sps = align.split()
-        fid_eid, eid_fid = {}, {}
+        fids, eids = [], []
         for sp in sps:
             tmp = sp.split('-')
-            fid = int(tmp[0])
-            eid = int(tmp[1])
-            fid_eid[fid] = eid
-            eid_fid[eid] = fid
-        BP = extract_sent(src_sent, tgt_sent, fid_eid, eid_fid)
+            eid = int(tmp[0])
+            fid = int(tmp[1])
+            eids.append(eid)
+            fids.append(fid)
+        BP = extract_sent(src_sent, tgt_sent, fids, eids)
         for bp in BP:
             bp_count[bp] += 1
         count += 1
         if count % 100 == 0:
             print count, '/', size
+
     bp_count = sorted(bp_count.iteritems(), key=lambda d: d[1], reverse=True)
 
     if threshold < 2:
@@ -115,6 +116,7 @@ def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
         E = item[0].split('\t')[1]
         count = item[1]
         E_count[E] += count
+
     bp_prob = defaultdict(float)
     for item in bp_count_new:
         bp = item[0]
