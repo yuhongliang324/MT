@@ -22,6 +22,7 @@ ALPHA_1 = 0.1
 ALPHA_UNK = 0.01
 ALPHA_2 = 1.0 - ALPHA_1 - ALPHA_UNK
 PROB_UNK = ALPHA_UNK / 10000000
+delta = 0.9
 
 stateid = defaultdict(lambda: len(stateid))
 
@@ -42,10 +43,10 @@ with open(sys.argv[2], "w") as outfile:
   # Print the unigrams
   for (ctxt, word), val in count2.items():
     v1 = count1[word]/ctxts1
+    val = max(val-delta, 0.0)
     v2 = val/ctxts2[ctxt]
     val = ALPHA_2 * v2 + ALPHA_1 * v1 + PROB_UNK
     print("%d %d %s %s %.4f" % (stateid[ctxt], stateid[word], word, word, -math.log(val)), file=outfile)
-  
   # Print the final state
   print(stateid["</s>"], file=outfile) 
   
