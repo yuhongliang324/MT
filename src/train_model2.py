@@ -139,11 +139,12 @@ def read_bitext(source_file, target_file):
     return bitext
 
 if __name__ == "__main__":
-    # source_file = sys.argv[1]
-    # target_file = sys.argv[2]
-    source_file = "en-de/valid.en-de.low.de"
-    target_file = "en-de/valid.en-de.low.en"
-    output_file = "output/alignment_ibm2.txt"
+    source_file = sys.argv[1]
+    target_file = sys.argv[2]
+    output_file = sys.argv[3]
+    #source_file = "../data/valid.en-de.low.de"
+    #target_file = "../data/valid.en-de.low.en"
+    #output_file = "output/alignment_ibm2.txt"
 
     bitext = read_bitext(source_file,target_file)
     model = IBM2(bitext,output_file)
