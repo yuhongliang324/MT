@@ -21,11 +21,10 @@ toy_test_en = os.path.join(data_root, 'toy.test.en')
 toy_test_de = os.path.join(data_root, 'toy.test.de')
 
 
-def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
+def extract(src_file, tgt_file, alignment_file, out_file, threshold=0, len_threshold=None):
     def extract_sent(src_sent, tgt_sent, fids, eids):
         F = src_sent.split()
         E = tgt_sent.split()
-        lenF = len(F)
         lenE = len(E)
         BP = set()
         for i1 in xrange(lenE):
@@ -59,16 +58,11 @@ def extract(src_file, tgt_file, alignment_file, out_file, threshold=0):
                 subF = ' '.join(F[j1: j2 + 1])
                 if len(subE) == 0 or len(subF) == 0:
                     continue
-                BP.add(subF + '\t' + subE)
-                '''
-                j1p = j1
-                while j1p >= 0 and (j1p == j1 or j1p not in fid_eid):
-                    j2p = j2
-                    while j2p < lenF and (j2p == j2 or j2p not in fid_eid):
-                        subF = ' '.join(F[j1p: j2p + 1])
+                if len_threshold:
+                    if len(subE.split()) <= len_threshold and len(subF.split()) <= len_threshold:
                         BP.add(subF + '\t' + subE)
-                        j2p += 1
-                    j1p -= 1'''
+                else:
+                    BP.add(subF + '\t' + subE)
         return BP
     reader = open(src_file)
     src_sents = reader.readlines()
@@ -143,4 +137,4 @@ def test1():
 
 
 # python $SCRIPT_DIR/phrase-extract.py $TRAIN_DATA.de $TRAIN_DATA.en $OUT_DIR/alignment.txt $OUT_DIR/phrase.txt
-extract(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], threshold=2)
+extract(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], threshold=2, len_threshold=3)
