@@ -14,13 +14,13 @@ mkdir -p $OUT_DIR
 python $SCRIPT_DIR/train-ngram.py $TRAIN_DATA.en $OUT_DIR/ngram-fst.txt
 
 # *** Implement 1: Train IBM Model 1 and find alignment
-#python $SCRIPT_DIR/train-model1.py $TRAIN_DATA.de $TRAIN_DATA.en $OUT_DIR/alignment.txt
+python $SCRIPT_DIR/train_model2.py $TRAIN_DATA.de $TRAIN_DATA.en $OUT_DIR/alignment.txt
 
 # *** Implement 2: Extract and score phrases
-#python $SCRIPT_DIR/phrase-extract.py $TRAIN_DATA.de $TRAIN_DATA.en $OUT_DIR/alignment_50.txt $OUT_DIR/phrase_50.txt
+python $SCRIPT_DIR/phrase-extract.py $TRAIN_DATA.de $TRAIN_DATA.en $OUT_DIR/alignment.txt $OUT_DIR/phrase.txt
 
 # *** Implement 3: Create WFSTs for phrases
-python $SCRIPT_DIR/create-phrase-fst.py $OUT_DIR/phrase_ibm2.txt $OUT_DIR/phrase-fst.txt
+python $SCRIPT_DIR/create-phrase-fst.py $OUT_DIR/phrase.txt $OUT_DIR/phrase-fst.txt
 
 # *** Compile WFSTs into a single model
 python $SCRIPT_DIR/symbols.py 2 < $OUT_DIR/phrase-fst.txt > $OUT_DIR/phrase-fst.isym

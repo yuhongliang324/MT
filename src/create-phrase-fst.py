@@ -13,7 +13,10 @@ def main(argv):
         itemli = phrase.strip().split(u'\t')
         source = itemli[0].split(u' ')
         target = itemli[1].split(u' ')
-        prob = itemli[2]
+        try:
+            prob = itemli[2]
+        except:
+            print phrase
         laststate = 0
         for item in source:
             if (item, NULL) in state_connect[laststate]:
